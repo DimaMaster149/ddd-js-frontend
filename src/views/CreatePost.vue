@@ -1,7 +1,6 @@
 <template>
   <div>
     <button @click="addPost">Create Post</button>
-    {{PostService.posts.length}}
   </div>
 </template>
 
@@ -17,6 +16,7 @@ export default {
   methods: {
     addPost() {
       this.PostService.createPost({
+        id: Math.random(0, 10000).toString(),
         title: 'title',
         text: 'some text'
       })
@@ -24,7 +24,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

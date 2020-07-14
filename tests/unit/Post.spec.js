@@ -1,8 +1,11 @@
 import VueCompositionAPI from '@vue/composition-api';
 import { mount, createLocalVue } from '@vue/test-utils';
+
 import usePostService from '@/models/Post/PostService';
 import { registry } from '@/plugins/context'
 import PostMock from '@/models/Post/PostMock'
+
+import { posts } from '../data/posts'
 
 const localVue = createLocalVue();
 localVue.use(VueCompositionAPI);
@@ -31,10 +34,23 @@ describe('PostService', () => {
     });
   })
 
+  it('createPost', async () => {
+    expect(PostService.posts.value).toStrictEqual([]);
+    const post = {
+      id: Math.random(0, 10000).toString(),
+      title: 'title',
+      text: 'text',
+    };
+
+    await PostService.createPost(post);
+
+    expect(PostService.posts.value).toStrictEqual([post]);
+  });
+
   it('getPosts', async () => {
     expect(PostService.posts.value).toStrictEqual([]);
     await PostService.getPosts();
 
-    expect(PostService.posts.value).toStrictEqual(PostMock.posts());
+    expect(PostService.posts.value).toStrictEqual(posts);
   });
 });

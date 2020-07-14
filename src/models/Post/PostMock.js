@@ -1,26 +1,13 @@
-const posts = [{
-  id: '1',
-  title: 'first',
-  text: 'post'
-  }, {
-  id: '2',
-  title: 'second',
-  text: 'post',
-}]
+import { posts } from '../../../tests/data/posts'
 
 export default {
-  posts() {
-    return posts;
-  },
   // eslint-disable-next-line, require-await
   async createPost (post) {
     return Promise.resolve(post)
   },
 
-  async removePost (postId) {
-    // return removed post ?
-    const foundPost = posts.find(post => post.id == postId)
-    return Promise.resolve(foundPost);
+  async removePost () {
+    return Promise.resolve();
   },
 
   async getPosts () {

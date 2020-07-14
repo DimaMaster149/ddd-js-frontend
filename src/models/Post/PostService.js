@@ -6,24 +6,46 @@ export default function PostService() {
   let api = get('PostApi');
 
   const createPost = async (post) => {
-    const newPost = await api.createPost(post);
-    posts.value.push(newPost);
+    try {
+      const newPost = await api.createPost(post);
+      posts.value.push(newPost);
+      return Promise.resolve();
+    } catch(err) {
+      console.log(err);
+      return Promise.reject(err);
+    }
   }
 
   const removePost = async (postId) => {
-    await api.removePost(postId);
-    posts.value = posts.value.filter(post => post.id !== postId)
-    return Promise.resolve();
+    try {
+      await api.removePost(postId);
+      posts.value = posts.value.filter(post => post.id !== postId)
+      return Promise.resolve();
+    } catch(err) {
+      console.log(err);
+      return Promise.reject(err);
+    }
   }
 
   const getPosts = async () => {
-    const allPosts = await api.getPosts();
-    posts.value = allPosts;
+    try {
+      const allPosts = await api.getPosts();
+      posts.value = allPosts;
+      return Promise.resolve(posts.value);
+    } catch(err) {
+      console.log(err);
+      return Promise.reject(err);
+    }
   }
 
   const getPost = async (postId) => {
-    const foundPost = await api.getPost(postId);
-    return Promise.resolve(foundPost)
+    try {
+      const foundPost = await api.getPost(postId);
+      return Promise.resolve(foundPost)
+    } catch(err) {
+      console.log(err);
+      return Promise.reject(err);
+    }
   }
 
   return {

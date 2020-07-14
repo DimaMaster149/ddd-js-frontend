@@ -1,32 +1,41 @@
 import { postsCollection } from '@/plugins/firebase'
-
+// update api to make it work as it should +
+// update mock to work the same way
+// write tests using mock
 export default {
   async createPost(post) {
-    const { title, text } = post;
-    const postToAdd = {
-      id: new Date(),
-      title,
-      text
+    try {
+      await postsCollection.doc(post.id).set(post);
+      return Promise.resolve(post)
+    } catch(err) {
+      return Promise.reject(err);
     }
-    await postsCollection.add(postToAdd);
-    return Promise.resolve(postToAdd)
   },
 
-  removePost(postId) {
-    console.log('removed postId: ', postId)
-    return Promise.resolve();
+  async removePost(postId) {
+    return postsCollection.doc(postId).delete();
   },
 
   async getPosts() {
-    const querySnapshot = await postsCollection.get()
-    const posts = []
-    querySnapshot.forEach(function(doc) {
-      posts.push(doc.data())
-    });
-    return Promise.resolve(posts);
+    try {
+      const querySnapshot = await postsCollection.get()
+      const posts = []
+      querySnapshot.forEach(function(doc) {
+        posts.push(doc.data())
+      });
+
+      return Promise.resolve(posts);
+    } catch(err) {
+      return Promise.reject(err);
+    }
   },
 
   async getPost(postId) {
-    return postsCollection.where('postId', '==', postId).get();
+    try {
+      const doc = await postsCollection.doc(postId).get();
+      return Promise.resolve(doc.data());
+    } catch(err) {
+      return Promise.reject(err);
+    }
   }
-}
+};
