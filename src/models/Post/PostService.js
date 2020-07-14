@@ -1,8 +1,9 @@
 import { ref } from '@vue/composition-api'
 import PostApi from '@/models/Post/PostApi'
 
-export default function usePostService() {
+export default function PostService() {
   let posts = ref([]);
+  let api = PostApi;
 
   const createPost = async (post) => {
     const newPost = await PostApi.createPost(post);

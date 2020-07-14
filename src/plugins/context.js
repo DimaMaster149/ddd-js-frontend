@@ -1,10 +1,20 @@
-// import Vue from 'vue';
-import usePostService from '@/models/Post/usePostService';
 import { provide } from '@vue/composition-api'
+import PostService from '@/models/Post/PostService';
+
+const context = {};
+
+export const registry = (key, store) => {
+  context[key] = store;
+};
+
+registry('PostService', PostService);
 
 const contextMixin = {
   setup() {
-    provide('PostService', usePostService())
+    Object.keys(context).forEach(key => {
+      const store = context[key]()
+      provide(key, store)
+    })
   },
 }
 
