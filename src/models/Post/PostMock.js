@@ -9,6 +9,9 @@ const posts = [{
 }]
 
 export default {
+  posts() {
+    return posts;
+  },
   // eslint-disable-next-line, require-await
   async createPost (post) {
     return Promise.resolve(post)
