@@ -10,28 +10,31 @@
   </div>
 </template>
 
-<script>
-import { inject } from '@vue/composition-api'
+<script lang="ts">
+import { inject, defineComponent } from '@vue/composition-api'
+// import { Component, Vue } from 'vue-property-decorator';
 
-export default {
+export default defineComponent ({
   name: 'create-post',
   data() {
     return {
       title: '',
-      text: '',
-    };
+      text: ''
+    }
   },
+
   setup() {
     const PostService = inject('PostService')
     return { PostService }
   },
+
   methods: {
     async addPost() {
       if (!this.title || !this.text) {
         alert('Title and text should not be empty');
         return;
       }
-
+  
       await this.PostService.createPost({
         id: Math.random(0, 10000).toString(),
         title: this.title,
@@ -39,9 +42,9 @@ export default {
       });
       this.title = '';
       this.text = '';
-    },
-  }
-}
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>

@@ -10,11 +10,12 @@
   </div>
 </template>
 
-<script>
-import PostItem from '@/components/PostItem';
-import { inject } from '@vue/composition-api'
+<script lang="ts">
+import PostItem from '@/components/PostItem.vue';
+import { inject, defineComponent } from '@vue/composition-api'
+// import { Component, Vue } from 'vue-property-decorator';
 
-export default {
+export default defineComponent ({
   name: 'Home',
   components: {
     PostItem
@@ -25,8 +26,8 @@ export default {
       PostService.getPosts()
     }
     return { PostService }
-  },
-}
+  }
+})
 </script>
 
 <style lang="scss" scoped>

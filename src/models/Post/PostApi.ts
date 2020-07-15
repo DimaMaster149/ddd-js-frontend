@@ -1,23 +1,25 @@
 import { postsCollection } from '@/plugins/firebase'
+import { IPost } from '@/models/Post/IPost'
+import { PostRepository } from '@/models/Post/PostRepository'
 
-export default {
-  async createPost(post) {
+export class PostApi implements PostRepository {
+  public async createPost(post: IPost) {
     try {
       await postsCollection.doc(post.id).set(post);
       return Promise.resolve(post)
     } catch(err) {
       return Promise.reject(err);
     }
-  },
+  }
 
-  async removePost(postId) {
+  public async removePost(postId: string) {
     return postsCollection.doc(postId).delete();
-  },
+  }
 
-  async getPosts() {
+  public async getPosts() {
     try {
       const querySnapshot = await postsCollection.get()
-      const posts = []
+      const posts = <Array<IPost>>([]);
       querySnapshot.forEach(function(doc) {
         posts.push(doc.data())
       });
@@ -26,9 +28,9 @@ export default {
     } catch(err) {
       return Promise.reject(err);
     }
-  },
+  }
 
-  async getPost(postId) {
+  public async getPost(postId: string) {
     try {
       const doc = await postsCollection.doc(postId).get();
       return Promise.resolve(doc.data());
@@ -36,4 +38,4 @@ export default {
       return Promise.reject(err);
     }
   }
-};
+}

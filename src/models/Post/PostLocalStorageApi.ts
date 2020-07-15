@@ -1,7 +1,9 @@
 const POSTS_KEY = 'posts';
+import { IPost } from '@/models/Post/IPost'
+import { PostRepository } from '@/models/Post/PostRepository'
 
-export default {
-  async createPost(post) {
+export class PostLocalStorageApi implements PostRepository {
+  public async createPost(post: IPost) {
     try {
       const posts = await this.getPosts();
       posts.push(post);
@@ -11,9 +13,9 @@ export default {
     } catch(err) {
       return Promise.reject(err);
     }
-  },
+  }
 
-  async removePost(postId) {
+  public async removePost(postId: string) {
     try {
       const posts = await this.getPosts();
       const filteredPosts = posts.filter(post => post.id !== postId);
@@ -23,9 +25,9 @@ export default {
     } catch(err) {
       return Promise.reject(err);
     }
-  },
+  }
 
-  async getPosts() {
+  public async getPosts() {
     try {
       const posts = JSON.parse(localStorage.getItem(POSTS_KEY));
       if (!posts) {
@@ -36,15 +38,16 @@ export default {
     } catch(err) {
       return Promise.reject(err);
     }
-  },
+  }
 
-  async getPost(postId) {
+  public async getPost(postId: string) {
     try {
-      const post = await this.getPosts().find(post => post.id === postId);
+      const posts = await this.getPosts()
+      const post = posts.find(post => post.id === postId);
 
       return Promise.resolve(post);
     } catch(err) {
       return Promise.reject(err);
     }
   }
-};
+}

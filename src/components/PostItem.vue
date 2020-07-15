@@ -7,15 +7,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'post-item',
-  props: {
-    post: {
-      type: Object,
-    }
-  },
-
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+@Component({ name: 'post-item' })
+export default class PostItem extends Vue {
+  @Prop() post!: Object;
 }
 </script>
 

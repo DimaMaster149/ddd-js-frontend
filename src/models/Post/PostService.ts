@@ -1,13 +1,14 @@
 import { ref } from '@vue/composition-api'
 import { get } from '@/plugins/context';
+import { IPost } from '@/models/Post/IPost'
 
 export default function PostService() {
-  let posts = ref([]);
+  let posts = ref<Array<IPost>>([]);
   let api = get('PostApi');
 
-  const createPost = async (post) => {
+  const createPost = async (post: IPost) => {
     try {
-      const newPost = await api.createPost(post);
+      const newPost: IPost = await api.createPost(post);
       posts.value.push(newPost);
       return Promise.resolve();
     } catch(err) {
@@ -16,7 +17,7 @@ export default function PostService() {
     }
   }
 
-  const removePost = async (postId) => {
+  const removePost = async (postId: string) => {
     try {
       await api.removePost(postId);
       posts.value = posts.value.filter(post => post.id !== postId)
@@ -38,7 +39,7 @@ export default function PostService() {
     }
   }
 
-  const getPost = async (postId) => {
+  const getPost = async (postId: string) => {
     try {
       const foundPost = await api.getPost(postId);
       return Promise.resolve(foundPost)

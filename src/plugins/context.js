@@ -1,7 +1,7 @@
 import { provide } from '@vue/composition-api'
 import PostService from '@/models/Post/PostService';
-// import PostApi from '@/models/Post/PostApi'
-import PostLocalStorageApi from '@/models/Post/PostLocalStorageApi'
+// import { PostApi } from '@/models/Post/PostApi'
+import { PostLocalStorageApi } from '@/models/Post/PostLocalStorageApi'
 
 const context = {};
 
@@ -14,8 +14,8 @@ export const get = (key) => {
 }
 
 registry('PostService', PostService);
-registry('PostApi', PostLocalStorageApi);
-// registry('PostApi', PostApi);
+registry('PostApi', new PostLocalStorageApi());
+// registry('PostApi', new PostApi());
 
 const contextMixin = {
   setup() {
