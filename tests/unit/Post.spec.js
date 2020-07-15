@@ -47,10 +47,33 @@ describe('PostService', () => {
     expect(PostService.posts.value).toStrictEqual([post]);
   });
 
+  it('removePost', async () => {
+    const postId = '2';
+
+    expect(PostService.posts.value).toStrictEqual([]);
+    await PostService.getPosts();
+    expect(PostService.posts.value).toStrictEqual(posts);
+
+    await PostService.removePost(postId)
+    
+    expect(PostService.posts.value).toStrictEqual([posts[0]]);
+  });
+
   it('getPosts', async () => {
     expect(PostService.posts.value).toStrictEqual([]);
     await PostService.getPosts();
 
     expect(PostService.posts.value).toStrictEqual(posts);
+  });
+
+  it('getPosts', async () => {
+    const postId = '1';
+
+    expect(PostService.posts.value).toStrictEqual([]);
+    await PostService.getPosts();
+    expect(PostService.posts.value).toStrictEqual(posts);
+
+    const post = await PostService.getPost(postId);
+    expect(post).toStrictEqual(posts[0]);
   });
 });

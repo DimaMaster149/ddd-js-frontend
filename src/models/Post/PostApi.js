@@ -1,7 +1,5 @@
 import { postsCollection } from '@/plugins/firebase'
-// update api to make it work as it should +
-// update mock to work the same way
-// write tests using mock
+
 export default {
   async createPost(post) {
     try {
