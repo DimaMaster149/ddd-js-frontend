@@ -3,14 +3,15 @@ import { mount, createLocalVue } from '@vue/test-utils';
 
 import usePostService from '@/models/Post/PostService';
 import { registry } from '@/plugins/context'
-import PostMock from '@/models/Post/PostMock'
+import { PostMock } from '@/models/Post/PostMock'
+import { PostRepository } from '@/models/Post/PostRepository'
 
 import { posts } from '../data/posts'
 
 const localVue = createLocalVue();
 localVue.use(VueCompositionAPI);
 
-const mountComposition = (cb) => {
+const mountComposition = (cb: any) => {
   return mount(
     {
       setup() {
@@ -25,9 +26,9 @@ const mountComposition = (cb) => {
 };
 
 describe('PostService', () => {
-  let PostService
+  let PostService: PostRepository
   beforeEach(async () => {
-    registry('PostApi', PostMock);
+    registry('PostApi', new PostMock());
 
     const component = mountComposition(() => {
       PostService = usePostService();
@@ -37,7 +38,7 @@ describe('PostService', () => {
   it('createPost', async () => {
     expect(PostService.posts.value).toStrictEqual([]);
     const post = {
-      id: Math.random(0, 10000).toString(),
+      id: (Math.random() * 1000).toString(),
       title: 'title',
       text: 'text',
     };

@@ -1,5 +1,4 @@
-import { IPost } from '@/models/Post/IPost'
-
+import { IPost } from '@/models/Post'
 export interface OrderRepository {
   createPost(): Promise<IPost>;
   removePost(postId: string): Promise<any>;

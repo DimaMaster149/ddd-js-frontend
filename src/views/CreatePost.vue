@@ -36,7 +36,7 @@ export default defineComponent ({
       }
   
       await this.PostService.createPost({
-        id: Math.random(0, 10000).toString(),
+        id: (Math.random()*1000).toString(),
         title: this.title,
         text: this.text
       });

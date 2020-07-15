@@ -1,6 +1,6 @@
 import { ref } from '@vue/composition-api'
 import { get } from '@/plugins/context';
-import { IPost } from '@/models/Post/IPost'
+import { IPost } from '@/models/Post'
 
 export default function PostService() {
   let posts = ref<Array<IPost>>([]);

@@ -1,6 +1,5 @@
 import { posts } from '../../../tests/data/posts'
-import { IPost } from '@/models/Post/IPost'
-import { PostRepository } from '@/models/Post/PostRepository'
+import { IPost, PostRepository } from '@/models/Post'
 
 export class PostMock implements PostRepository {
   // eslint-disable-next-line, require-await

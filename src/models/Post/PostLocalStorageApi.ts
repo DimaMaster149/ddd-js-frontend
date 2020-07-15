@@ -1,6 +1,5 @@
 const POSTS_KEY = 'posts';
-import { IPost } from '@/models/Post/IPost'
-import { PostRepository } from '@/models/Post/PostRepository'
+import { IPost, PostRepository } from '@/models/Post'
 
 export class PostLocalStorageApi implements PostRepository {
   public async createPost(post: IPost) {
