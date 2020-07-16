@@ -24,7 +24,7 @@ export default defineComponent ({
   },
 
   setup() {
-    const PostService = inject('PostService')
+    const PostService: any = inject('PostService')
     return { PostService }
   },
 
@@ -52,6 +52,7 @@ export default defineComponent ({
   display: flex;
   justify-content: center;
   width: 100%;
+  margin: 100px 0;
 
   &__inner {
     display: flex;

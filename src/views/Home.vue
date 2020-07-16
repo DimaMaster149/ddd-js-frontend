@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    home
     <post-item 
       v-for="(post, index) in PostService.posts"
       :post="post"
@@ -21,7 +20,7 @@ export default defineComponent ({
     PostItem
   },
   setup() {
-    const PostService = inject('PostService');
+    const PostService: any = inject('PostService');
     if (PostService.posts.value.length === 0) {
       PostService.getPosts()
     }
@@ -32,6 +31,7 @@ export default defineComponent ({
 
 <style lang="scss" scoped>
 .home {
+  margin: 100px;
   display: flex;
   flex-direction: column;
 }
