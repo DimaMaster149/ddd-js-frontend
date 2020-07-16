@@ -7,7 +7,7 @@ export class PostMock implements PostRepository {
     return Promise.resolve(post)
   }
 
-  public async removePost () {
+  public async removePost (postId: string) {
     return Promise.resolve();
   }
 
@@ -16,7 +16,9 @@ export class PostMock implements PostRepository {
   }
 
   public async getPost (postId: string) {
-    const foundPost = posts.find(post => post.id == postId)
-    return Promise.resolve(foundPost);
+    const foundPost = posts.find((post: IPost) => post.id == postId)
+    if (foundPost) {
+      return Promise.resolve(foundPost);
+    } return Promise.reject();
   }
 }
