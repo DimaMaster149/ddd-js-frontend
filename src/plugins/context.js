@@ -1,7 +1,7 @@
 import { provide } from '@vue/composition-api'
 import PostService from '@/models/Post/PostService';
 // import { PostApi } from '@/models/Post/PostApi'
-import { PostLocalStorageApi } from '@/models/Post/PostLocalStorageApi'
+import { PostLocalStorageApi } from '@/models/Post/api/PostLocalStorageApi'
 
 const context = {};
 

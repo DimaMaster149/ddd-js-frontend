@@ -1,10 +1,11 @@
 import { ref } from '@vue/composition-api'
 import { get } from '@/plugins/context';
 import { IPost } from '@/models/Post/IPost'
+import { PostRepository } from '@/models/Post/PostRepository'
 
 export default function PostService() {
   let posts = ref<Array<IPost>>([]);
-  let api = get('PostApi');
+  let api: PostRepository = get('PostApi');
 
   const createPost = async (post: IPost) => {
     try {

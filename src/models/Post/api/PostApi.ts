@@ -20,7 +20,8 @@ export class PostApi implements PostRepository {
       const querySnapshot = await postsCollection.get()
       const posts = <Array<IPost>>([]);
       querySnapshot.forEach(function(doc) {
-        posts.push(doc.data())
+        const postItem: any = doc.data();
+        posts.push(postItem);
       });
 
       return Promise.resolve(posts);
@@ -31,7 +32,7 @@ export class PostApi implements PostRepository {
 
   public async getPost(postId: string) {
     try {
-      const doc = await postsCollection.doc(postId).get();
+      const doc: any = await postsCollection.doc(postId).get();
       return Promise.resolve(doc.data());
     } catch(err) {
       return Promise.reject(err);

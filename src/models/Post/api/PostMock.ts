@@ -1,4 +1,4 @@
-import { posts } from '../../../tests/data/posts'
+import { posts } from '../../../../tests/data/posts'
 import { IPost, PostRepository } from '@/models/Post'
 
 export class PostMock implements PostRepository {

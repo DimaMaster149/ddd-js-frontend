@@ -3,8 +3,7 @@ import { mount, createLocalVue } from '@vue/test-utils';
 
 import usePostService from '@/models/Post/PostService';
 import { registry } from '@/plugins/context'
-import { PostMock } from '@/models/Post/PostMock'
-// import { PostRepository } from '@/models/Post/PostRepository'
+import { PostMock } from '@/models/Post/api/PostMock'
 
 import { posts } from '../data/posts'
 
