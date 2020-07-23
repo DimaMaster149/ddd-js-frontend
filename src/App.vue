@@ -2,6 +2,7 @@
   <div id="app">
     <router-link class="nav-link" :to="{name: 'home'}">Home</router-link>
     <router-link class="nav-link" :to="{name: 'create-post'}">Create post</router-link>
+    <router-link class="nav-link" :to="{name: 'user'}">User</router-link>
     <router-view/>
   </div>
 </template>

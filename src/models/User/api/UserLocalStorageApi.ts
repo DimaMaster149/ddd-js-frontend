@@ -1,4 +1,6 @@
 const USERS_KEY: string = 'users';
+const AUTHORIZED_USER_KEY: string = 'username';
+
 import { IPost } from '@/models/Post'
 import { IUser, UserRepository } from '@/models/User'
 
@@ -10,6 +12,26 @@ export class UserLocalStorageApi implements UserRepository {
       localStorage.setItem(USERS_KEY, JSON.stringify(users));
 
       return Promise.resolve(user)
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  }
+
+  public async loginUser(username: string) {
+    try {
+      localStorage.setItem(AUTHORIZED_USER_KEY, username)
+      let users = await this.getUsers();
+      const user = users.find((u: IUser) => u.username === username);
+      return Promise.resolve(user);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  }
+
+  public async logoutUser() {
+    try {
+      localStorage.removeItem(AUTHORIZED_USER_KEY)
+      return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
     }

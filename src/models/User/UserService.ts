@@ -4,20 +4,37 @@ import { IPost } from '@/models/Post'
 import { IUser, UserRepository } from '@/models/User'
 import { IUserAddress } from '../shared/ObjectValue/IUserAddress';
 
-export default function PostService() {
+export default function UserService() {
   let users = ref<Array<IUser>>([]);
+  let currentUser:any = ref(null);
   let api: UserRepository = get('UserApi');
 
   const createUser = async (user: IUser) => {
     try {
       const newUser: IUser = await api.createUser(user);
       users.value.push(newUser);
+      currentUser.value = newUser;
+      console.log(currentUser, 'currentUser')
       return Promise.resolve();
     } catch (err) {
       console.log(err);
       return Promise.reject(err);
     }
   }
+
+  const loginUser = async (username: string) => {
+    try {
+      const user:IUser = await api.loginUser(username);
+      currentUser.value = user;
+    } catch (err) {
+      console.log(err);
+      return Promise.reject(err);
+    }
+  };
+
+  const logoutUser = async () => {
+    return api.logoutUser()
+  };
 
   const getUsers = async () => {
     try {
@@ -71,7 +88,10 @@ export default function PostService() {
 
   return {
     users,
+    currentUser,
     createUser,
+    loginUser,
+    logoutUser,
     getUsers,
     updateUser,
     getPosts,
