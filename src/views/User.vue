@@ -20,6 +20,8 @@
       <div>
         User logged in
         His username is: {{UserService.currentUser.username}}
+        <br/>
+        {{UserService.currentUser.getAddress()}}
       </div>
     </template>
   </div>
