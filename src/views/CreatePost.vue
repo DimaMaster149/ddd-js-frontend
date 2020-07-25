@@ -6,26 +6,33 @@
       <span>Text</span>
       <input type="text" v-model="text">
       <button @click="addPost">Create Post</button>
+
+      {{ allPosts }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { inject, defineComponent } from '@vue/composition-api'
-// import { Component, Vue } from 'vue-property-decorator';
 
 export default defineComponent ({
   name: 'create-post',
   data() {
     return {
       title: '',
-      text: ''
+      text: '',
+      allPosts: null,
     }
   },
 
   setup() {
     const PostService: any = inject('PostService')
-    return { PostService }
+    const UserService: any = inject('UserService')
+    return { PostService, UserService }
+  },
+
+  mounted() {
+    this.allPosts = this.UserService.currentUser.getPosts();
   },
 
   methods: {
@@ -35,14 +42,17 @@ export default defineComponent ({
         return;
       }
   
-      await this.PostService.createPost({
+      this.UserService.currentUser.addPost({
         id: (Math.random()*1000).toString(),
         title: this.title,
         text: this.text
       });
+
+      await this.UserService.currentUser.save();
+
       this.title = '';
       this.text = '';
-    }
+    },
   },
 })
 </script>

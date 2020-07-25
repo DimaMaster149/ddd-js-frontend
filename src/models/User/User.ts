@@ -1,6 +1,7 @@
 import { IUser, UserRepository } from '@/models/User'
 import { IUserAddress } from '../shared/ObjectValue/IUserAddress';
 import { get } from '@/plugins/context';
+import { IPost } from '../Post';
 
 export class User {
   public user: IUser;
@@ -22,6 +23,14 @@ export class User {
     return this.user.posts
   }
 
+  public addPost(post:IPost) {
+    return this.user.posts.push(post);
+  }
+
+  public removePost(postId: string) {
+    return this.user.posts = this.user.posts.filter(post => post.id !== postId);
+  }
+  
   public getId() {
     return this.user.id
   }

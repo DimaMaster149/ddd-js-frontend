@@ -18,10 +18,9 @@
 
     <template v-else>
       <div>
-        User logged in
-        His username is: {{UserService.currentUser.username}}
+        User {{ UserService.currentUser.getUsername() }} logged in
         <br/>
-        {{UserService.currentUser.getAddress()}}
+
       </div>
     </template>
   </div>
