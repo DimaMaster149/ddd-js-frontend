@@ -1,7 +1,6 @@
 import { IUser } from '@/models/User'
 import { IPost } from '@/models/Post'
 
-
 export interface UserRepository {
   createUser(user: IUser): Promise<IUser>;
   loginUser(username: string): Promise<IUser>;

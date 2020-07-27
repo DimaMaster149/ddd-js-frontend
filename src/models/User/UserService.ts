@@ -14,7 +14,7 @@ export default function UserService() {
       const newUser: IUser = await api.createUser(user);
       users.value.push(newUser);
       currentUser.value = newUser;
-      console.log(currentUser, 'currentUser')
+      
       return Promise.resolve();
     } catch (err) {
       console.log(err);
@@ -26,6 +26,8 @@ export default function UserService() {
     try {
       const user:IUser = await api.loginUser(username);
       currentUser.value = user;
+
+      return Promise.resolve()
     } catch (err) {
       console.log(err);
       return Promise.reject(err);
@@ -39,6 +41,7 @@ export default function UserService() {
   const getUsers = async () => {
     try {
       users.value = await api.getUsers();
+
       return Promise.resolve(users.value);
     } catch (err) {
       console.log(err);
@@ -48,8 +51,9 @@ export default function UserService() {
 
   const updateUser = async ({ userId, address }: { userId: string, address: IUserAddress }) => {
     try {
-      const user = users.value.find(u => u.id == userId);
+      const user: IUser = users.value.find(u => u.id == userId)!;
       const updatedUser = api.updateUser({ userId, user: { ...user, address } });
+
       return Promise.resolve(updatedUser);
     } catch (err) {
       console.log(err);
@@ -59,31 +63,15 @@ export default function UserService() {
 
 
   const getPosts = async (userId: string) => {
-    try {
-      const posts = await api.getPosts(userId);
-      return Promise.resolve(posts);
-    } catch (err) {
-      console.log(err);
-      return Promise.reject(err);
-    }
+    return api.getPosts(userId);
   }
 
   const addPost = async ({ userId, post }: { userId: string, post: IPost }) => {
-    try {
-      return api.addPost({ userId, post });
-    } catch (err) {
-      console.log(err);
-      return Promise.reject(err);
-    }
-
+    return api.addPost({ userId, post });
   }
+
   const removePost = async ({ userId, postId }: { userId: string, postId: string }) => {
-    try {
-      return api.removePost({ userId, postId });
-    } catch (err) {
-      console.log(err);
-      return Promise.reject(err);
-    }
+    return api.removePost({ userId, postId });
   }
 
   return {
