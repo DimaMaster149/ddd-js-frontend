@@ -27,7 +27,7 @@ export default function UserService() {
       const user:IUser = await api.loginUser(username);
       currentUser.value = user;
 
-      return Promise.resolve()
+      return Promise.resolve();
     } catch (err) {
       console.log(err);
       return Promise.reject(err);
@@ -35,7 +35,15 @@ export default function UserService() {
   };
 
   const logoutUser = async () => {
-    return api.logoutUser()
+    try {
+      await api.logoutUser(); 
+      currentUser.value = null;
+
+      return Promise.resolve();
+    } catch (err) {
+      console.log(err);
+      return Promise.reject(err);
+    }
   };
 
   const getUsers = async () => {
