@@ -1,8 +1,10 @@
 const USERS_KEY: string = 'users';
 const AUTHORIZED_USER_KEY: string = 'username';
 
+import { UserError } from '@/errors/UserError';
 import { IPost } from '@/models/Post'
 import { IUser, UserRepository } from '@/models/User'
+import { left, right } from '@sweet-monads/either';
 
 export class UserLocalStorageApi implements UserRepository {
   public async createUser(user: IUser) {
@@ -11,9 +13,9 @@ export class UserLocalStorageApi implements UserRepository {
       users.push(user);
       localStorage.setItem(USERS_KEY, JSON.stringify(users));
 
-      return Promise.resolve(user)
+      return right(user)
     } catch (err) {
-      return Promise.reject(err);
+      return left(new UserError(`Can't create user`));
     }
   }
 

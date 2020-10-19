@@ -22,7 +22,7 @@ export default defineComponent ({
   },
   methods: {
     async registrate() {
-      await this.UserService.createUser({
+      const result = await this.UserService.createUser({
         id: (Math.random()*1000).toString(),
         username: this.username,
         address: {
@@ -32,7 +32,9 @@ export default defineComponent ({
         },
         posts: [],
       });
-      console.log(this.UserService.currentUser, 'method')
+
+      console.log({result})
+      console.log(this.UserService.currentUser, 'current user')
     },
   },
 })

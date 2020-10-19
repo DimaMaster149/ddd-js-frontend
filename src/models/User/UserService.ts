@@ -4,22 +4,26 @@ import { IPost } from '@/models/Post'
 import { IUser, UserRepository } from '@/models/User'
 import { IUserAddress } from '../shared/ObjectValue/IUserAddress';
 
+import { UserError } from '@/errors/UserError'
+import { AuthorizationError } from '@/errors/AuthorizationError'
+import { PostsError } from '@/errors/PostsError'
+
+import { right, left } from '@sweet-monads/either';
+
 export default function UserService() {
   let users = ref<Array<IUser>>([]);
   let currentUser:any = ref(null);
   let api: UserRepository = get('UserApi');
 
   const createUser = async (user: IUser) => {
-    try {
-      const newUser: IUser = await api.createUser(user);
+    const maybeUser = await api.createUser(user);
+    if (maybeUser.isRight()) {
+      const { value: newUser } = maybeUser;
       users.value.push(newUser);
       currentUser.value = newUser;
-      
-      return Promise.resolve();
-    } catch (err) {
-      console.log(err);
-      return Promise.reject(err);
     }
+    
+    return maybeUser;
   }
 
   const loginUser = async (username: string) => {
@@ -27,10 +31,10 @@ export default function UserService() {
       const user:IUser = await api.loginUser(username);
       currentUser.value = user;
 
-      return Promise.resolve();
+      return right(user);
     } catch (err) {
       console.log(err);
-      return Promise.reject(err);
+      return left(new AuthorizationError(`Can't login`));
     }
   };
 
@@ -39,10 +43,10 @@ export default function UserService() {
       await api.logoutUser(); 
       currentUser.value = null;
 
-      return Promise.resolve();
+      return right(null);
     } catch (err) {
       console.log(err);
-      return Promise.reject(err);
+      return left(new AuthorizationError(`Can't logout`));
     }
   };
 
@@ -50,10 +54,9 @@ export default function UserService() {
     try {
       users.value = await api.getUsers();
 
-      return Promise.resolve(users.value);
+      return right(users.value);
     } catch (err) {
-      console.log(err);
-      return Promise.reject(err);
+      return left(new UserError(`Can't load users`));
     }
   }
 
@@ -62,24 +65,38 @@ export default function UserService() {
       const user: IUser = users.value.find(u => u.id == userId)!;
       const updatedUser = api.updateUser({ userId, user: { ...user, address } });
 
-      return Promise.resolve(updatedUser);
+      return right(updatedUser);
     } catch (err) {
-      console.log(err);
-      return Promise.reject(err);
+      return left(new UserError(`Can't update user`));
     }
   }
 
 
   const getPosts = async (userId: string) => {
-    return api.getPosts(userId);
+    try {
+      const posts = await api.getPosts(userId);
+      return right(posts);
+    } catch(err) {
+      return left(new PostsError(`Can't load user posts`))
+    }
   }
 
   const addPost = async ({ userId, post }: { userId: string, post: IPost }) => {
-    return api.addPost({ userId, post });
+    try {
+      const createdPost = await api.addPost({ userId, post });
+      return right(createdPost);
+    } catch(err) {
+      return left(new PostsError(`Can't create new post`))
+    }
   }
 
   const removePost = async ({ userId, postId }: { userId: string, postId: string }) => {
-    return api.removePost({ userId, postId });
+    try {
+      await api.removePost({ userId, postId });
+      return right(null);
+    } catch(err) {
+      return left(new PostsError(`Can't delete existing post`))
+    }
   }
 
   return {
