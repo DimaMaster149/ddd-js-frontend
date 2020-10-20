@@ -51,13 +51,13 @@ export default function UserService() {
   };
 
   const getUsers = async () => {
-    try {
-      users.value = await api.getUsers();
-
-      return right(users.value);
-    } catch (err) {
-      return left(new UserError(`Can't load users`));
+    const maybeUsers = await api.getUsers();
+    if (maybeUsers.isRight()) {
+      const { value: loadedUsers } = maybeUsers;
+      users.value = loadedUsers;
     }
+
+    return maybeUsers;
   }
 
   const updateUser = async ({ userId, address }: { userId: string, address: IUserAddress }) => {
@@ -70,7 +70,6 @@ export default function UserService() {
       return left(new UserError(`Can't update user`));
     }
   }
-
 
   const getPosts = async (userId: string) => {
     try {

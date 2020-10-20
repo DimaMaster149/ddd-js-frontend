@@ -1,6 +1,8 @@
 const USERS_KEY: string = 'users';
 const AUTHORIZED_USER_KEY: string = 'username';
 
+import { AuthorizationError } from '@/errors/AuthorizationError';
+import { PostsError } from '@/errors/PostsError';
 import { UserError } from '@/errors/UserError';
 import { IPost } from '@/models/Post'
 import { IUser, UserRepository } from '@/models/User'
@@ -8,15 +10,14 @@ import { left, right } from '@sweet-monads/either';
 
 export class UserLocalStorageApi implements UserRepository {
   public async createUser(user: IUser) {
-    try {
-      const users = await this.getUsers();
+    const maybeUsers = await this.getUsers();
+
+    if (maybeUsers.isRight()) {
+      const { value: users } = maybeUsers;
       users.push(user);
       localStorage.setItem(USERS_KEY, JSON.stringify(users));
-
-      return right(user)
-    } catch (err) {
-      return left(new UserError(`Can't create user`));
-    }
+      return right(user);
+    } return left(new UserError(`Can't create user`));
   }
 
   public async loginUser(username: string) {
@@ -24,18 +25,19 @@ export class UserLocalStorageApi implements UserRepository {
       localStorage.setItem(AUTHORIZED_USER_KEY, username)
       let users = await this.getUsers();
       const user = users.find((u: IUser) => u.username === username);
-      return Promise.resolve(user);
+
+      return right(user);
     } catch (err) {
-      return Promise.reject(err);
+      return left(new AuthorizationError(`Can't login`));
     }
   }
 
   public async logoutUser() {
     try {
       localStorage.removeItem(AUTHORIZED_USER_KEY)
-      return Promise.resolve();
+      return right(null);
     } catch (err) {
-      return Promise.reject(err);
+      return left(new AuthorizationError(`Can't logout`));
     }
   }
 
@@ -45,14 +47,14 @@ export class UserLocalStorageApi implements UserRepository {
       if (json) {
         const users = JSON.parse(json);
         if (!users) {
-          return Promise.resolve([]);
+          return right([]);
         }
-        return Promise.resolve(users);
+        return right(users);
       }
-      return Promise.resolve([]);
+      return right([]);
 
     } catch (err) {
-      return Promise.reject(err);
+      return left(new UserError(`Can't load users`));
     }
   }
 
@@ -64,9 +66,9 @@ export class UserLocalStorageApi implements UserRepository {
       users[index] = user;      
       localStorage.setItem(USERS_KEY, JSON.stringify(users));
 
-      return Promise.resolve(user)
+      return right(user)
     } catch (err) {
-      return Promise.reject(err);
+      return left(new UserError(`Can't update user`));
     }
   }
 
@@ -77,14 +79,14 @@ export class UserLocalStorageApi implements UserRepository {
         const users = JSON.parse(json);
         const user = users.find((u: IUser) => u.id === userId);
         if (user) {
-          return Promise.resolve(user.posts);
+          return right(user.posts);
         } else {
-          return Promise.reject('No such user');
+          return left(new UserError('No such user found'));
         }
       }
-      return Promise.reject('No such user');
+      return left(new UserError('No such user found'));
     } catch (err) {
-      return Promise.reject(err);
+      return left(new PostsError(`Can't load posts`));
     }
   }
 
@@ -97,15 +99,15 @@ export class UserLocalStorageApi implements UserRepository {
         if (user) {
           user.posts.push(post);
           localStorage.setItem(USERS_KEY, JSON.stringify(users));
-          return Promise.resolve(post);
+          return right(post);
         } else {
-          return Promise.reject('No such user');
+          return left(new UserError('No such user found'));
         }
       }
 
-      return Promise.reject('No users in local storage');
+      return left(new UserError('No users in local storage'));
     } catch (err) {
-      return Promise.reject(err);
+      return left(new PostsError(`Can't add new post`));
     }
   }
 
@@ -118,15 +120,15 @@ export class UserLocalStorageApi implements UserRepository {
         if (user) {
           user.posts = users.posts.filter((p: IPost) => p.id !== postId);
           localStorage.setItem(USERS_KEY, JSON.stringify(users));
-          return Promise.resolve();
+          return right(null);
         } else {
-          return Promise.reject('No such user');
+          return left(new UserError('No such user found'));
         }
       }
 
-      return Promise.reject('No users in local storage');
+      return left(new UserError('No users in local storage'));
     } catch (err) {
-      return Promise.reject(err);
+      return left(new PostsError(`Can't remove existing post`));
     }
   }
 }
