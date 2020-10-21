@@ -11,6 +11,7 @@ export interface UserRepository {
   loginUser(username: string): Promise<Either<AuthorizationError, IUser>>;
   logoutUser(): Promise<Either<AuthorizationError, any>>;
   getUsers(): Promise<Either<UserError, IUser[]>>;
+  getUser(): Promise<Either<UserError, IUser>>;
   updateUser({ userId, user }: { userId: string, user: IUser }): Promise<Either<UserError, IUser>>;
   getPosts(userId: string): Promise<Either<PostsError | UserError, IPost[]>>;
   addPost({ userId, post }: { userId: string, post: IPost }): Promise<Either<PostsError, IPost>>;
