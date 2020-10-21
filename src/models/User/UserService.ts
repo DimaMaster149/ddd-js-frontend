@@ -27,31 +27,27 @@ export default function UserService() {
   }
 
   const loginUser = async (username: string) => {
-    try {
-      const user:IUser = await api.loginUser(username);
-      currentUser.value = user;
+    const maybeUser = await api.loginUser(username);
 
-      return right(user);
-    } catch (err) {
-      console.log(err);
-      return left(new AuthorizationError(`Can't login`));
-    }
+    if (maybeUser.isRight()) {
+      const { value: user } = maybeUser;
+      currentUser.value = user;
+    } 
+
+    return maybeUser;
   };
 
   const logoutUser = async () => {
-    try {
-      await api.logoutUser(); 
-      currentUser.value = null;
+    const maybeUser = await api.logoutUser();
 
-      return right(null);
-    } catch (err) {
-      console.log(err);
-      return left(new AuthorizationError(`Can't logout`));
+		if (maybeUser.isRight()) {
+			currentUser.value = null;
     }
   };
 
   const getUsers = async () => {
     const maybeUsers = await api.getUsers();
+
     if (maybeUsers.isRight()) {
       const { value: loadedUsers } = maybeUsers;
       users.value = loadedUsers;
@@ -61,41 +57,25 @@ export default function UserService() {
   }
 
   const updateUser = async ({ userId, address }: { userId: string, address: IUserAddress }) => {
-    try {
-      const user: IUser = users.value.find(u => u.id == userId)!;
-      const updatedUser = api.updateUser({ userId, user: { ...user, address } });
-
-      return right(updatedUser);
-    } catch (err) {
-      return left(new UserError(`Can't update user`));
-    }
+    const maybeUser = await api.getUser(userId);
+    if (maybeUser.isRight()) {
+      const { value: user } = maybeUser;
+      return api.updateUser({ userId, user: { ...user, address } });
+    } 
+    
+    return maybeUser;
   }
 
   const getPosts = async (userId: string) => {
-    try {
-      const posts = await api.getPosts(userId);
-      return right(posts);
-    } catch(err) {
-      return left(new PostsError(`Can't load user posts`))
-    }
+    return api.getPosts(userId);
   }
 
   const addPost = async ({ userId, post }: { userId: string, post: IPost }) => {
-    try {
-      const createdPost = await api.addPost({ userId, post });
-      return right(createdPost);
-    } catch(err) {
-      return left(new PostsError(`Can't create new post`))
-    }
+    return api.addPost({ userId, post })
   }
 
   const removePost = async ({ userId, postId }: { userId: string, postId: string }) => {
-    try {
-      await api.removePost({ userId, postId });
-      return right(null);
-    } catch(err) {
-      return left(new PostsError(`Can't delete existing post`))
-    }
+    return api.removePost({ userId, postId });
   }
 
   return {
