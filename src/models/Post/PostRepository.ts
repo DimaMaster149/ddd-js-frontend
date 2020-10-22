@@ -1,7 +1,10 @@
 import { IPost } from '@/models/Post'
+import { UserError } from '@/errors/UserError';
+import { PostsError } from '@/errors/PostsError';
+import { Either } from '@sweet-monads/either';
 export interface PostRepository {
-  createPost(post: IPost): Promise<IPost>;
-  removePost(postId: string): Promise<any>;
-  getPosts(): Promise<IPost[]>;
-  getPost(postId: string): Promise<IPost>;
+	createPost(post: IPost): Promise<Either<UserError | PostsError, IPost>>;
+	removePost(postId: string): Promise<Either<UserError | PostsError, any>>;
+	getPosts(): Promise<Either<UserError | PostsError, IPost[]>>;
+	getPost(postId: string): Promise<Either<UserError | PostsError, IPost>>;
 }

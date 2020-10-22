@@ -2,52 +2,42 @@ import { ref } from '@vue/composition-api'
 import { get } from '@/plugins/context';
 import { IPost } from '@/models/Post/IPost'
 import { PostRepository } from '@/models/Post/PostRepository'
+import { right } from '@sweet-monads/either';
 
 export default function PostService() {
   let posts = ref<Array<IPost>>([]);
   let api: PostRepository = get('PostApi');
 
   const createPost = async (post: IPost) => {
-    try {
-      const newPost: IPost = await api.createPost(post);
+    const maybePost = await api.createPost(post);
+
+    if (maybePost.isRight()) {
+      const { value: newPost } = maybePost;
       posts.value.push(newPost);
-      return Promise.resolve();
-    } catch(err) {
-      console.log(err);
-      return Promise.reject(err);
-    }
+      return right(newPost)
+    } return maybePost;
   }
 
   const removePost = async (postId: string) => {
-    try {
-      await api.removePost(postId);
+    const maybeRight = await api.removePost(postId);
+
+    if (maybeRight.isRight()) {
       posts.value = posts.value.filter(post => post.id !== postId)
-      return Promise.resolve();
-    } catch(err) {
-      console.log(err);
-      return Promise.reject(err);
-    }
+    } return maybeRight;
   }
 
   const getPosts = async () => {
-    try {
-      const allPosts = await api.getPosts();
+    const maybePosts = await api.getPosts();
+    
+    if (maybePosts.isRight()) {
+      const { value: allPosts } = maybePosts
       posts.value = allPosts;
-      return Promise.resolve(posts.value);
-    } catch(err) {
-      console.log(err);
-      return Promise.reject(err);
-    }
+      return right(posts.value)
+    } return maybePosts
   }
 
   const getPost = async (postId: string) => {
-    try {
-      const foundPost = await api.getPost(postId);
-      return Promise.resolve(foundPost)
-    } catch(err) {
-      console.log(err);
-      return Promise.reject(err);
-    }
+    return await api.getPost(postId)
   }
 
   return {

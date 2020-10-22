@@ -7,7 +7,7 @@ import { Either } from "@sweet-monads/either";
 
 
 export interface UserRepository {
-	createUser(user: IUser): Either<UserError, IUser>;
+	createUser(user: IUser): Promise<Either<UserError, IUser>>;
 	loginUser(username: string): Promise<Either<AuthorizationError, IUser>>;
 	logoutUser(): Promise<Either<AuthorizationError, any>>;
 	getUsers(): Promise<Either<UserError, IUser[]>>;
