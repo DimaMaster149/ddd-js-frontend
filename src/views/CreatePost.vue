@@ -2,30 +2,35 @@
   <div class="create-post">
     <div class="create-post__inner">
       <span>Title</span>
-      <input type="text" v-model="title">
+      <input
+        type="text"
+        v-model="title"
+      >
       <span>Text</span>
-      <input type="text" v-model="text">
+      <input
+        type="text"
+        v-model="text"
+      >
       <button @click="addPost">Create Post</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { inject, defineComponent } from '@vue/composition-api'
-// import { Component, Vue } from 'vue-property-decorator';
+import { inject, defineComponent } from '@vue/composition-api';
 
-export default defineComponent ({
+export default defineComponent({
   name: 'create-post',
   data() {
     return {
       title: '',
-      text: ''
-    }
+      text: '',
+    };
   },
 
   setup() {
-    const PostService: any = inject('PostService')
-    return { PostService }
+    const PostService: any = inject('PostService');
+    return { PostService };
   },
 
   methods: {
@@ -34,17 +39,17 @@ export default defineComponent ({
         alert('Title and text should not be empty');
         return;
       }
-  
+
       await this.PostService.createPost({
-        id: (Math.random()*1000).toString(),
+        id: (Math.random() * 1000).toString(),
         title: this.title,
-        text: this.text
+        text: this.text,
       });
       this.title = '';
       this.text = '';
-    }
+    },
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -57,7 +62,7 @@ export default defineComponent ({
   &__inner {
     display: flex;
     flex-direction: column;
-    max-width: 250px
+    max-width: 250px;
   }
 }
 </style>

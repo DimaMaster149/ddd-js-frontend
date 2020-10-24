@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <post-item 
+    <post-item
       v-for="(post, index) in PostService.posts"
       :post="post"
       :key="index"
@@ -11,22 +11,21 @@
 
 <script lang="ts">
 import PostItem from '@/components/PostItem.vue';
-import { inject, defineComponent } from '@vue/composition-api'
-// import { Component, Vue } from 'vue-property-decorator';
+import { inject, defineComponent } from '@vue/composition-api';
 
-export default defineComponent ({
+export default defineComponent({
   name: 'Home',
   components: {
-    PostItem
+    PostItem,
   },
   setup() {
     const PostService: any = inject('PostService');
     if (PostService.posts.value.length === 0) {
-      PostService.getPosts()
+      PostService.getPosts();
     }
-    return { PostService }
-  }
-})
+    return { PostService };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
