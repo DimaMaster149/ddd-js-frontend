@@ -3,7 +3,8 @@ import { IPost, PostRepository } from '@/models/Post';
 
 import { PostsError } from '@/errors/PostsError';
 
-import { left, right } from '@sweet-monads/either';
+import { left, right } from '@ts-monads/either';
+import { UserError } from '@/errors/UserError';
 
 export class PostLocalStorageApi implements PostRepository {
 	public async createPost(post: IPost) {
@@ -12,8 +13,8 @@ export class PostLocalStorageApi implements PostRepository {
       const { value: posts } = maybePosts;
       posts.push(post);
       localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
-      return right(post)
-    } return maybePosts;
+      return right<UserError, IPost>(post);
+    } return left<UserError, IPost>(new UserError(`Can't find Users`));
 	}
 
 	public async removePost(postId: string) {
@@ -22,7 +23,7 @@ export class PostLocalStorageApi implements PostRepository {
       const { value: posts } = maybePosts;
       const filteredPosts = posts.filter((post: IPost) => post.id !== postId);
       localStorage.setItem(POSTS_KEY, JSON.stringify(filteredPosts));
-      return right(null)
+      return right<PostsError, any>(null);
     } return maybePosts;
 	}
 
@@ -31,12 +32,12 @@ export class PostLocalStorageApi implements PostRepository {
 			const json = localStorage.getItem(POSTS_KEY);
 			if (json) {
 				const posts: IPost[] = JSON.parse(json);
-				return right(posts);
+				return right<PostsError, IPost[]>(posts);
 			}
 			const emptyPosts: IPost[] = [];
-			return right(emptyPosts);
+			return right<PostsError, IPost[]>(emptyPosts);
 		} catch (err) {
-			return left(new PostsError(err.message));
+			return left<PostsError, IPost[]>(new PostsError(err.message));
 		}
 	}
 
@@ -46,10 +47,10 @@ export class PostLocalStorageApi implements PostRepository {
 			const { value: posts } = maybePosts;
       const post = posts.find((post: IPost) => post.id === postId);
       if (post) {
-        return right(post);
-      } return left(new PostsError(`This post does not exist`))
+        return right<PostsError, IPost>(post);
+      } return left<PostsError, IPost>(new PostsError(`This post does not exist`));
     }
     
-    return maybePosts;
+    return left<PostsError, IPost>(new PostsError(`Can't find posts`));
 	}
 }

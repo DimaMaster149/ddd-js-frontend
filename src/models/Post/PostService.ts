@@ -2,7 +2,7 @@ import { ref } from '@vue/composition-api'
 import { get } from '@/plugins/context';
 import { IPost } from '@/models/Post/IPost'
 import { PostRepository } from '@/models/Post/PostRepository'
-import { right } from '@sweet-monads/either';
+import { right } from '@ts-monads/either';
 
 export default function PostService() {
   let posts = ref<Array<IPost>>([]);

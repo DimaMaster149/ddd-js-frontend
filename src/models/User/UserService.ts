@@ -8,7 +8,7 @@ import { UserError } from '@/errors/UserError'
 import { AuthorizationError } from '@/errors/AuthorizationError'
 import { PostsError } from '@/errors/PostsError'
 
-import { right, left } from '@sweet-monads/either';
+import { right, left } from '@ts-monads/either';
 
 export default function UserService() {
   let users = ref<Array<IUser>>([]);

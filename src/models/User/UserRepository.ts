@@ -3,7 +3,7 @@ import { IPost } from '@/models/Post'
 import { AuthorizationError } from '@/errors/AuthorizationError'
 import { UserError } from '@/errors/UserError'
 import { PostsError } from '@/errors/PostsError'
-import { Either } from "@sweet-monads/either";
+import { Either } from "@ts-monads/either";
 
 
 export interface UserRepository {
