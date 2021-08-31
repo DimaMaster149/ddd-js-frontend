@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    home
-    <post-item 
+    <post-item
       v-for="(post, index) in PostService.posts"
       :post="post"
       :key="index"
@@ -10,27 +9,28 @@
   </div>
 </template>
 
-<script>
-import PostItem from '@/components/PostItem';
-import { inject } from '@vue/composition-api'
+<script lang="ts">
+import PostItem from '@/components/PostItem.vue';
+import { inject, defineComponent } from '@vue/composition-api';
 
-export default {
+export default defineComponent({
   name: 'Home',
   components: {
-    PostItem
+    PostItem,
   },
   setup() {
-    const PostService = inject('PostService');
+    const PostService: any = inject('PostService');
     if (PostService.posts.value.length === 0) {
-      PostService.getPosts()
+      PostService.getPosts();
     }
-    return { PostService }
+    return { PostService };
   },
-}
+});
 </script>
 
 <style lang="scss" scoped>
 .home {
+  margin: 100px;
   display: flex;
   flex-direction: column;
 }

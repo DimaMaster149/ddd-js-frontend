@@ -1,21 +1,17 @@
 <template>
   <div class="post-item">
-    <span>{{post.id}}</span>
-    <span>{{post.title}}</span>
-    <span>{{post.text}}</span>
+    <span class="post-item__text">{{post.id}}</span>
+    <span class="post-item__text">{{post.title}}</span>
+    <span class="post-item__text">{{post.text}}</span>
     <span class="post-item__remove" @click="$emit('remove', post.id)">remove</span>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'post-item',
-  props: {
-    post: {
-      type: Object,
-    }
-  },
-
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+@Component({ name: 'post-item' })
+export default class PostItem extends Vue {
+  @Prop() post!: Object;
 }
 </script>
 
@@ -23,6 +19,11 @@ export default {
 .post-item {
   display: flex;
   flex-direction: row;
+
+  &__text {
+    margin: 0 10px;
+  }
+  
   &__remove {
     margin-left: 12px;
     color: red;
